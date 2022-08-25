@@ -5,4 +5,4 @@ RUN pip3 install keras==2.3.1 keras_metrics
 RUN pip install pandas sklearn matplotlib pathlib networkx
 RUN cd / && git clone https://github.com/ibabedal/iSOM_GSN.git 
 
-ENTRYPOINT [ "/bin/python /iSOM_GSN/linux_version_v1/MoCSOM.py" ]
+ENTRYPOINT [ "cd /iSOM_GSN/linux_version_v1/ && /usr/local/bin/python /iSOM_GSN/linux_version_v1/MoCSOM.py" ]
