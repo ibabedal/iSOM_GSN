@@ -6,4 +6,4 @@ RUN pip install pandas sklearn matplotlib pathlib networkx
 WORKDIR /
 COPY linux_version_v1 /
 
-ENTRYPOINT [ "/usr/local/bin/python MoCSOM.py"" ]
+ENTRYPOINT [ "/usr/local/bin/python MoCSOM.py" ]
