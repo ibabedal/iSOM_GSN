@@ -11,6 +11,12 @@ Created on Thu May  9 23:02:47 2019
 
 @author: Fatima
 """
+
+"""
+Modified on Fri Sep  16 22:02:47 2019
+
+@author: Ibrahim
+"""
 # One code file to do the following actions:
 # Create template Map 
 # Create RGB Images 
@@ -167,16 +173,68 @@ def randomly_distribute_files(num):
     return;
 def apply_CNN():
     # Importing the Keras libraries and packages
-    from keras.models import Sequential
-    from keras.layers import Convolution2D,BatchNormalization,Dropout
-    from keras.layers import MaxPooling2D
-    from keras.layers import Flatten
-    from keras.layers import Dense
+    #from keras.models import Sequential
+    #from keras.layers import Convolution2D,BatchNormalization,Dropout
+    #from keras.layers import MaxPooling2D
+    #from keras.layers import Flatten
+    #from keras.layers import Dense
     #Imports for collecting metrics
-    import keras_metrics as km
+    #import keras_metrics as km
     import tensorflow as tf
     #import tensorflow.keras as keras
+    model = tf.keras.Sequential(
+        [
+            #1- first conv layer
+            tf.keras.layers.Conv2D(32, (3, 3), padding='same',input_shape = (64, 64, 3), activation = tf.nn.relu),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPooling2D((2, 2), strides=2),
+            tf.keras.layers.Dropout(0.2),
+            #2- second conv layer
+            tf.keras.layers.Conv2D(32, (3, 3), padding='same',input_shape = (64, 64, 3), activation = tf.nn.relu),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.MaxPooling2D((2, 2), strides=2),
+            tf.keras.layers.Dropout(0.5),
+            #3- feedforward network
+            tf.keras.layers.Flatten(),
+            tf.keras.layers.Dense(128, activation=tf.nn.relu),
+            tf.keras.layers.BatchNormalization(),
+            tf.keras.layers.Dropout(0.2),
+            tf.keras.layers.Dense(3, activation=tf.nn.softmax)
+        ]
+    )
+    precision = tf.keras.metrics.Precision()
+    recall = tf.keras.metrics.Recall()
+    #f1 = 2* (float(precision)*float(recall)) / (float(precision) + float(recall))
+
+    model.compile(optimizer='adam',
+              loss=tf.keras.losses.CategoricalCrossentropy(),
+              metrics=['accuracy',precision,recall])
+
     
+    train_datagen = tf.keras.preprocessing.image.ImageDataGenerator()
+    test_datagen = tf.keras.preprocessing.image.ImageDataGenerator()
+    seed =7
+    training_set = train_datagen.flow_from_directory('training',
+                                                     target_size = (64, 64),
+                                                     batch_size = 32,
+                                                     class_mode = 'categorical',
+                                                     shuffle =True,
+                                                     seed =seed)
+
+    test_set = test_datagen.flow_from_directory('test',
+                                                target_size = (64, 64),
+                                                batch_size =32,
+                                                class_mode = 'categorical',
+                                                shuffle =True,
+                                                seed =seed)
+
+    model.fit(training_set, epochs=35, steps_per_epoch=8,
+                            validation_data = test_set,
+                            validation_steps = 3,
+                            shuffle =True,
+                            verbose = 2
+                )
+    '''   
     # Initialising the CNN
     classifier = Sequential()
     
@@ -242,6 +300,7 @@ def apply_CNN():
                              shuffle =True,
                              verbose = 2
                              )
+    '''
     return;
 
 def delete_recreate_dirStructure():
