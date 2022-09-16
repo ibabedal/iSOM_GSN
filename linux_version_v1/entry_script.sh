@@ -1,3 +1,3 @@
 #!/bin/bash
 
-/usr/local/bin/python MoCSOM.py
+/usr/local/bin/python /MoCSOM.py
